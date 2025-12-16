@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Romantic Anniversary Surprise</title>
+    <link rel="icon" type="image" href="photo/website-icon.png">
+    <style>
+        body::before {
+            content:"";
+            position:fixed;
+            inset:0;
+
+            background:
+            linear-gradient(
+                 rgba(255,230,242,0.6),
+                 rgba(255,179,217,0.6)
+                ),
+                url("background/bgpage3.png");
+
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+
+            z-index:-1;
+        }
+
+        body {
+            margin:0;padding:0;box-sizing:border-box;
+            font-family:'Quicksand',sans-serif;
+            overflow-x:hidden;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position:relative;
+            touch-action:none;
+        
+        /* PAGE TRANSITION */
+        
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+
+        body.fade-out {
+            opacity: 0;
+        }
+        
+        #initial-screen{
+            position:relative;z-index:10
+        }
+        #love-button{
+            position:relative;
+            z-index:11;
+            pointer-events:auto;
+            font-size:100px;
+            color:#ff69b4;
+            cursor:pointer;
+            animation:pulse 2s infinite;
+            text-shadow:0 0 20px rgba(255,105,180,.5);
+            transition:transform .3s
+        }
+
+        #love-button:hover{transform:scale(1.1)}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .instruction{margin-top:20px;font-size:18px;color:#ff69b4;text-align:center}
+
+        #envelope{display:none;position:relative;width:420px;height:240px;background:#f5f5dc;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,.2);perspective:1000px}
+        .envelope-flap{position:absolute;top:0;left:0;width:100%;height:50%;background:#f5f5dc;border-radius:10px 10px 0 0;transform-origin:top;transition:transform 1s ease}
+        .envelope-flap.open{transform:rotateX(-180deg)}
+        #letter{
+            display:none;
+            position:absolute;
+            top:50%;left:50%;
+            transform:translate(-50%,-50%);
+            width:380px;
+            height:420px;
+            background:#fffaf0;
+            border-radius:5px;
+            box-shadow:0 4px 8px rgba(0,0,0,.1);
+            padding:20px;
+            overflow-y:auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            font-family:Georgia, serif;
+            animation:slide-out 2s ease-out forwards}
+        @keyframes slide-out{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+
+        .letter-header{font-family:'Dancing Script',cursive;font-size:24px;color:#ff69b4;text-align:center;margin-bottom:20px}
+        .letter-content{font-size:16px;line-height:1.6;color:#333;text-align:justify;margin-bottom:20px}
+        .letter-signature{margin-top:20px;text-align:right}
+        .letter-signature .boyfie{font-style:italic;font-family:'Dancing Script',cursive}
+        .letter-signature .name{font-weight:bold;font-size:18px}
+
+        .Our-images{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;justify-content:space-between;width:650px}
+        .Our-images img{width:190px;height:240px;object-fit:cover;background:white;border:10px solid white;border-radius:8px;border-bottom:28px solid white;box-shadow:0 10px 25px rgba(0,0,0,.25)}
+        .Our-images .left{transform:translateX(-80px) rotate(-8deg)}
+        .Our-images .right{transform:translateX(80px) rotate(8deg)}
+        #next-button{display:none;margin-top:20px;padding:10px 20px;background:#ff69b4;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;transition:background .3s}
+        #next-button:hover{background:#ff1493}
+        @media (max-width:600px){#love-button{font-size:80px}.instruction{font-size:16px}#envelope{width:250px;height:150px}#letter{width:220px;height:300px}.Our-images{width:300px}.Our-images img{width:100px;height:100px}}
+        audio{display:none}
+    </style>
+</head>
+<body>
+    
+    <!-- Initial Screen -->
+    <div id="initial-screen">
+        <div id="love-button">❤️</div>
+        <div class="instruction">Tekan hati ni 💕</div>
+    </div>
+
+    <!-- Envelope + Letter -->
+    <div id="envelope"><div class="envelope-flap"></div></div>
+
+    <div id="letter">
+        <div class="letter-header">Dear My Sayang 💕</div>
+        <div class="letter-content">
+            Happy anniversary Sayanggg💕, hari ni genap 3 tahun dah kita berkenalan, banyak yang kita lalui setiap tahun.
+            sakit, pedih, bahagia semua ada kan. semua ni takkan jadi kalau awak tak reply status simsimi saya. terima kasih sangat sangat kepada simsimi hehe😝
+            bukan dekat situ je kita habis, kita sambung chat dekat ws. "hai saya inspektor naz" HAHAHAHAHAHAHAHAHA itu ayat first saya.
+            ingat woo sampai sekarang 🤭</div>
+
+        <div class="letter-content">
+            Awak pon start cerita kisah silam awak kat saya. awak sungguh sungguh cerita kat saya pasal si dia sampai nak saya chat dia.
+            siap kene menyamar jadi pompuan🤭 saya pon layankan je la. time awak tengah luahkan apa yang awak hadap time tu.
+            saya terfikir like "ouh kita senasib, why not in relay dengan dia, sama sama dapat nasib yang sama" tuptup 3 tahun kau haaaaa.
+            start dari situ la kita chat hari hari tanpa putus. one day kita try on call, awak pulak malu malu kucing hehe.
+            saya pon try cover malu tu, pastu saya ajar awak math (cara mengorat) hehe😝. tapi masa tu belum in relay lagi kan. 
+            saya pon tak berapa ingat bila kita start in relay. bulan 4 ke 5 macam tu kot. 2023 haaaa.</div>
+
+        <div class="letter-content">
+            Saya berharap sangat saya boleh bahagia kan awak lebih daripada masa lalu awak. macam macam saya buat untuk awak, untuk kita.
+            banyak jugak la ujian kita hadap. awak jugak yang banyak tanggung semua hmm. awak doa kan la semoga kita kekal sampai kawin.
+            walaupun hujung dunia😔 sama sama doa ye. saya minta maaf atas salah silap saya sebelum ni (terlampau banyak) I'm so sorry🥺🙏</div>
+        <div class="letter-signature">
+            <div class="boyfie">Your boyfie,</div>
+            <div class="name">NAZZ</div>
+        </div>
+        <button id="next-button">SETERUSNYA 💕</button>
+    </div>
+
+    <div class="Our-images">
+        <img src="photo/me.png" alt="Me" class="left">
+        <img src="photo/you.png" alt="You" class="right">
+    </div>
+
+    <!-- Audio -->
+    <audio id="button-sound" src="audio/button.mp3"></audio>
+    <audio id="paper-slide-sound" src="audio/paper-slide.mp3"></audio>
+    <audio id="bg-music" src="audio/page3.mp3" preload="auto" loop></audio>
+
+    <script>
+
+    window.addEventListener("load", () => {
+        document.body.classList.add("fade-in");
+    });
+
+    // elements
+    const loveButton = document.getElementById('love-button');
+    const initialScreen = document.getElementById('initial-screen');
+    const envelope = document.getElementById('envelope');
+    const envelopeFlap = document.querySelector('.envelope-flap');
+    const letter = document.getElementById('letter');
+    const OurImages = document.querySelector('.Our-images');
+    const nextButton = document.getElementById('next-button');
+    const paperSlideSound = document.getElementById('paper-slide-sound');
+    const bgMusic = document.getElementById('bg-music');
+    const buttonSound = document.getElementById('button-sound');
+
+    // set volumes 
+    bgMusic.volume = 0.30;
+    paperSlideSound.volume = 0.8;
+    buttonSound.volume = 0.7;
+
+    // safe autoplay
+    function playBgmSafely() {
+        const promise = bgMusic.play();
+        if (promise !== undefined) {
+            promise.catch(() => {
+                document.body.addEventListener('click', () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+        }
+    }
+
+    function fadeInAudio(audio, duration = 800) {
+    audio.volume = 0;
+    audio.play();
+    let step = 0.05;
+    const interval = duration / (1 / step);
+    const fade = setInterval(() => {
+        if (audio.volume < 0.5) {
+            audio.volume += step;
+        } else {
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+function fadeOutAudio(audio, duration = 500) {
+    let step = 0.05;
+    const interval = duration / (audio.volume / step);
+    const fade = setInterval(() => {
+        if (audio.volume > 0) {
+            audio.volume -= step;
+        } else {
+            audio.pause();
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+    // try autoplay on load
+    window.addEventListener('load', () => {
+        playBgmSafely();
+    });
+
+    // LOVE button behaviour
+    loveButton.addEventListener('click', () => {
+        document.body.style.overflow = 'hidden';
+        initialScreen.style.display = 'none';
+        envelope.style.display = 'block';
+
+        setTimeout(() => {
+            
+            paperSlideSound.currentTime = 0;
+            paperSlideSound.play();
+
+            envelopeFlap.classList.add('open');
+        }, 500);
+
+        const onFlapEnd = (e) => {
+            letter.style.display = 'block';
+            setTimeout(() => {
+                OurImages.style.display = 'flex';
+            }, 300);
+
+            // remove listener to avoid repeated triggers
+            envelopeFlap.removeEventListener('transitionend', onFlapEnd);
+        };
+        envelopeFlap.addEventListener('transitionend', onFlapEnd);
+    });
+
+    // Show next button when user scrolls near bottom of letter
+    letter.addEventListener('scroll', () => {
+        const scrollTop = letter.scrollTop;
+        const scrollHeight = letter.scrollHeight;
+        const clientHeight = letter.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight - 50) {
+            nextButton.style.display = 'block';
+        }
+    });
+
+    // Next button sound + navigate
+    nextButton.addEventListener('click', () => {
+        buttonSound.currentTime = 0;
+        buttonSound.play();
+        fadeInAudio(bgMusic);
+
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+            window.location.href = 'page4.html';
+        }, 500);
+    });
+    </script>
+</body>
+</html>

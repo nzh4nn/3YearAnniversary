@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anniversary Maze Game 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand&family=Dancing+Script&display=swap" rel="stylesheet">
+<link rel="icon" type="image" href="photo/website-icon.png">
+<style>
+    body::before {
+        content:"";
+        position:fixed;
+        inset:0;
+
+        background:
+            linear-gradient(
+                rgba(255,230,242,0.6),
+                rgba(255,179,217,0.6)
+            ),
+            url("background/bgpage2.png");
+
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+
+            z-index:-1;
+            filter: brightness(1.05) contrast(1.05);
+        }
+
+@media (max-width:768px){
+    body::before{
+        background-position:center top;
+    }
+}
+        
+    body {
+        margin:0;
+        padding:0;
+        font-family:'Quicksand',sans-serif;
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+
+        height:100vh;
+        overflow:hidden;
+        position:relative;
+
+        /* PAGE TRANSITION */
+
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    body.fade-in {
+        opacity: 1;
+    }
+
+    body.fade-out {
+        opacity: 0;
+    }
+
+/* Floating hearts */
+.heart { position:absolute; font-size:2rem; color:#ff69b4; animation:float 6s infinite linear; opacity:0.7;}
+.heart:nth-child(1){left:10%;animation-delay:0s;}
+.heart:nth-child(2){left:25%;animation-delay:1s;}
+.heart:nth-child(3){left:40%;animation-delay:2s;}
+.heart:nth-child(4){left:55%;animation-delay:3s;}
+.heart:nth-child(5){left:70%;animation-delay:4s;}
+@keyframes float {0%{transform:translateY(100vh) rotate(0deg);}100%{transform:translateY(-100vh) rotate(360deg);}}
+
+/* Intro Screen */
+#intro{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; width:100%; height:100%; position:absolute; top:0; left:0;
+    background:linear-gradient(rgba(255,255,255,0.25),rgba(255,255,255,0.15)
+    );
+    backdrop-filter: blur(6px);
+    z-index:100;
+}
+#intro-gif{ width:200px; height:200px; margin-bottom:20px;}
+.intro-box{ background-color:white; border-radius:20px; padding:30px 20px; text-align:center; width:90%; max-width:360px; box-shadow:0 10px 30px rgba(168, 8, 8, 0.1);}
+.intro-box h1{ font-size:1.8rem; margin:0 0 10px 0; color:#ff69b4;}
+.intro-box p{ font-family:'Dancing Script',cursive; font-size:1.2rem; margin:0 0 20px 0; color:#ff4f7a;}
+.intro-box button{ background:white; border:2px solid #ff69b4; color:#ff69b4; padding:10px 30px; border-radius:25px; font-family:'Dancing Script',cursive; font-size:1rem; cursor:pointer;}
+.intro-box button:hover{ transform:scale(1.05); box-shadow:0 5px 15px rgba(255,105,180,0.4);}
+
+#gameDetails{
+    display:none;
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.6);
+    backdrop-filter: blur(5px);
+    align-items:center;
+    justify-content:center;
+    z-index:90;
+}
+
+.details-card{
+    background:white;
+    border-radius:25px;
+    padding:30px 20px;
+    width:90%;
+    max-width:360px;
+    text-align:center;
+    border:3px dashed #ffb3d9;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.details-gif{
+    width:120px;
+    margin-bottom:10px;
+}
+
+.details-card h2{
+    font-family:'Pacifico',cursive;
+    color:#ff69b4;
+    margin:10px 0;
+}
+
+.details-text,
+.reward,
+.howto,
+.wish{
+    font-size:0.95rem;
+    color:#444;
+    margin:8px 0;
+    line-height:1.5;
+}
+
+.reward{
+    color:#ff4f7a;
+    font-weight:bold;
+}
+
+#startGameBtn{
+    margin-top:15px;
+    background:linear-gradient(135deg,#ff69b4,#ffb3d9);
+    border:none;
+    color:white;
+    padding:12px 28px;
+    border-radius:25px;
+    font-family:'Dancing Script',cursive;
+    font-size:1.1rem;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+#startGameBtn:hover{
+    transform:scale(1.05);
+    box-shadow:0 5px 15px rgba(255,105,180,0.4);
+}
+
+/* Maze */
+#maze-container{ 
+    display:none; 
+    margin-top:20px; 
+    position:relative;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+#maze-container.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#maze-wrapper{
+  position: relative;           
+  width: 420px;                 
+  height: 420px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border: 10px solid #ffeef6;   
+  box-sizing: border-box;
+  background: transparent;
+  overflow: visible; 
+  margin: 8px;
+}
+#maze {
+  display: grid;
+  grid-template-columns: repeat(10, 3fr);
+  grid-template-rows: repeat(10, 3fr);
+  grid-auto-rows: 1fr;
+  gap: 0;                     
+  width: 100%; height: 100%;
+  margin: 0;
+  padding: 0;        
+  box-sizing: border-box;
+  position: absolute;            
+  overflow: hidden;
+  top: 0; left: 0;
+}
+
+.cell {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+
+.path { 
+    background-image: url("game/path.png"); 
+    background-size: 32px 32px;
+    background-repeat: repeat;
+    image-rendering: pixelated;
+    filter: brightness(1.05);
+}
+.wall { 
+    background-image: url("game/wall.png"); 
+    background-size: 32px 32px; 
+    background-repeat: repeat;
+    image-rendering: pixelated;
+    filter: contrast(1.2) saturate(1.15);
+}
+
+.finish { z-index: 4; position: relative; }
+.player { z-index: 5; position: relative; 
+}
+
+.player img {
+    animation: step 0.2s ease;
+}
+
+@keyframes step {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.cell img {
+  width: 110%;
+  height: 110%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Arrow Buttons */
+#controls {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 420px; /* ikut lebar maze */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.controls-left {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.controls-right {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+    align-items: center;
+    transform: translate(6px, 18px);
+}
+    
+#controls button{
+    width: 58px;
+    height: 58px;
+    border-radius:50%;
+    border:none;
+    background:linear-gradient(145deg,#ffb3d9,#ff69b4);
+    box-shadow:0px 4px 10px rgba(0,0,0,0.25);
+    cursor:pointer;
+}
+
+#controls button img{
+    width:45%;
+    pointer-events: none;
+}
+
+#controls button:active{
+    transform:scale(0.9);
+}
+
+@media (min-width: 768px) {
+    .mobile-controls {
+        display: none;
+    }
+}
+
+/* Overlay success */
+#success-overlay{
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(255,255,255,0.6); display:flex; flex-direction:column; justify-content:center; align-items:center;
+    z-index:100; display:none; opacity:0; transition:opacity 1s;
+}
+#success-overlay.show{ display:flex; opacity:1; }
+#success-overlay img{ width:200px; height:200px; margin-bottom:20px; }
+#success-overlay h2{ font-family:'Pacifico',cursive; font-size:2rem; color:#ff69b4; margin:0; }
+#success-overlay button{ margin-top:10px; padding:10px 25px; border-radius:25px; font-family:'Dancing Script',cursive; cursor:pointer; font-size:1rem; border:none; transition:transform 0.3s, box-shadow 0.3s, opacity 1s; }
+#playAgainBtn{ background:linear-gradient(135deg,#ff69b4,#ffb3d9); color:white; }
+#playAgainBtn:hover{ transform:scale(1.05); box-shadow:0 5px 15px rgba(255,105,180,0.4); }
+#nextPageBtn{ background:linear-gradient(135deg,#ffb3d9,#ff69b4); color:white; opacity:0; }
+#nextPageBtn.show{ opacity:1; }
+
+/* Button press animation */
+.button-press {
+    transform: scale(0.88);
+    transition: transform 0.15s ease;
+    touch-action: none;
+    overscroll-behavior: none;
+}
+#maze-container, #maze-wrapper {
+    max-width: 95vw;
+    max-height: 95vw;
+}
+#controls button:active {
+    transform: scale(0.9);
+}
+
+</style>
+</head>
+<body>
+
+<!-- Floating hearts -->
+<div class="heart">💕</div>
+<div class="heart">💖</div>
+<div class="heart">💗</div>
+<div class="heart">💓</div>
+<div class="heart">💕</div>
+
+<!-- Intro -->
+<div id="intro">
+    <img id="intro-gif" src="photo/romantic.gif" alt="Romantic GIF">
+    <div class="intro-box">
+        <h1>Haiii Sayangggg 💕!!!</h1>
+        <p>Jom main game 🤗 💕</p>
+        <button id="startBtn">JOM</button>
+    </div>
+</div>
+<!-- Game Details Screen -->
+<div id="gameDetails">
+    <div class="details-card">
+        <img src="photo/crymilk.gif" class="details-gif" alt="Milk Cry">
+
+        <h2>Game Details 💕</h2>
+
+        <p class="details-text">
+            Help Milk to find Mocha 💗<br>
+            Reach the end to get your reward!
+        </p>
+
+        <p class="reward">
+            Reward: <b>a sweet hug 😘</b>
+        </p>
+
+        <p class="howto">
+            How to Play:<br>
+            Use the arrow buttons to move around to find Mocha
+        </p>
+
+        <p class="wish">
+            GOODLUCK!!!💖
+        </p>
+
+
+        <button id="startGameBtn">Start Game 💕</button>
+    </div>
+</div>
+
+<!-- Maze -->
+<div id="maze-container">
+    <div id="maze-wrapper">
+        <div id="maze"></div>
+    </div>
+
+    <div id="controls">
+        <div class="controls-left">
+        <button id="up"><img src="game/up.png"></button>
+        <button id="down"><img src="game/down.png"></button>
+    </div>
+
+    <div class="controls-right">
+        <button id="left"><img src="game/left.png"></button>
+        <button id="right"><img src="game/right.png"></button>
+    </div>
+</div>
+
+<!-- Success overlay -->
+<div id="success-overlay">
+    <img src="photo/success.gif" alt="Success GIF">
+    <h2>🎉YEAYYY JUMPA😍! 💕</h2>
+    <div style="display:flex; gap:10px;">
+        <button id="playAgainBtn">Main Lagi</button>
+        <button id="nextPageBtn">SETERUSNYA</button>
+    </div>
+</div>
+
+<!-- Audio -->
+<audio id="bgMusic" src="audio/bg-music.mp3" loop preload="auto"></audio>
+<audio id="soundPop" src="audio/pop.mp3" preload="auto"></audio>
+<audio id="soundStartGame" src="audio/start.mp3" preload="auto"></audio>
+<audio id="soundClick" src="audio/move.mp3" preload="auto"></audio>
+<audio id="soundSuccess" src="audio/success.mp3" preload="auto"></audio>
+<audio id="buttonSound" src="audio/button.mp3" preload="auto"></audio>
+
+<script>
+
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+function playButtonSFX() {
+    buttonSound.currentTime = 0;
+    buttonSound.play();
+}
+
+function animateBtn(btn) {
+    btn.classList.add("button-press");
+    setTimeout(() => btn.classList.remove("button-press"), 150);
+}
+const intro=document.getElementById('intro');
+const gameDetails=document.getElementById('gameDetails');
+const mazeContainer=document.getElementById('maze-container');
+
+const startBtn = document.getElementById('startBtn');
+const startGameBtn = document.getElementById('startGameBtn');
+const playAgainBtn=document.getElementById('playAgainBtn');
+const nextBtn=document.getElementById('nextPageBtn');
+
+const bgMusic = document.getElementById('bgMusic');
+const soundPop = document.getElementById('soundPop');
+const soundStartGame = document.getElementById('soundStartGame');
+const soundClick = document.getElementById('soundClick');
+const soundSuccess = document.getElementById('soundSuccess');
+const buttonSound = document.getElementById("buttonSound");
+
+bgMusic.volume = 0.50;
+soundPop.volume = 0.9;
+soundStartGame.volume = 0.9;
+soundClick.volume = 0.1;
+soundSuccess.volume = 1.0;
+buttonSound.volume = 0.9;
+
+// --- Intro ---
+
+mazeContainer.style.display = 'none';
+    startBtn.addEventListener('click',()=>{
+    soundPop.currentTime = 0;
+    soundPop.play();
+
+    bgMusic.currentTime = 0;
+    bgMusic.play(); 
+
+    intro.style.display='none';
+    gameDetails.style.display='flex';
+
+});
+    startGameBtn.addEventListener('click',()=>{
+    soundStartGame.currentTime = 0;
+    soundStartGame.play();
+
+    gameDetails.style.display='none';
+    mazeContainer.style.display='block';
+    setTimeout(() => mazeContainer.classList.add("show"), 50);
+    initMaze();
+});
+
+// Maze setup
+const mazeGrid=document.getElementById('maze');
+const successOverlay=document.getElementById('success-overlay');
+const successAudio=document.getElementById('soundSuccess');
+
+
+// Maze 10x10: 0=open,1=wall
+const mazeMap=[
+[0,0,1,0,0,0,0,0,0,0],
+[1,0,1,0,1,1,1,0,1,0],
+[1,0,0,0,1,0,0,0,1,0],
+[1,0,1,0,1,1,1,1,1,0],
+[1,1,1,0,0,0,1,0,0,0],
+[0,0,1,1,1,1,1,0,1,1],
+[1,0,0,0,0,0,0,0,0,1],
+[1,1,0,1,1,1,1,1,1,1],
+[0,0,0,0,1,0,0,0,1,0],
+[0,1,1,0,0,0,1,0,0,0]
+];
+
+let playerPos={x:0,y:0};
+let finishPos={x:9,y:9};
+
+function shakeMaze() {
+    const wrapper = document.getElementById("maze-wrapper");
+    wrapper.classList.add("shake");
+    setTimeout(() => wrapper.classList.remove("shake"), 200);
+}
+
+
+function initMaze(){
+    mazeGrid.innerHTML = '';
+    for(let y=0; y<10; y++){
+        for(let x=0; x<10; x++){
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+           if (mazeMap[y][x] === 1) { cell.classList.add('wall');   // guna wall.png
+        }         
+            else { cell.classList.add('path');   // guna path.png
+        }
+
+            if(x===playerPos.x && y===playerPos.y){
+                cell.classList.add('player');
+                const img = document.createElement('img');
+                img.src = 'game/milk.png';
+                cell.appendChild(img);
+            }
+
+            if(x===finishPos.x && y===finishPos.y){
+                cell.classList.add('finish');
+                const img = document.createElement('img');
+                img.src = 'game/mocha.png';
+                cell.appendChild(img);
+            }
+
+            mazeGrid.appendChild(cell);
+            placeFinishMask(); // <-- tambah ini supaya mask dibuat setiap kali maze dirender / dikemaskini
+
+        }
+
+    }
+}
+
+function fadeInAudio(audio, duration = 800) {
+    audio.volume = 0;
+    audio.play();
+    let step = 0.05;
+    const interval = duration / (1 / step);
+    const fade = setInterval(() => {
+        if (audio.volume < 0.5) {
+            audio.volume += step;
+        } else {
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+function fadeOutAudio(audio, duration = 500) {
+    let step = 0.05;
+    const interval = duration / (audio.volume / step);
+    const fade = setInterval(() => {
+        if (audio.volume > 0) {
+            audio.volume -= step;
+        } else {
+            audio.pause();
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+
+// call this at the end of initMaze() so cells exist
+function placeFinishMask() {
+    // remove existing mask if any
+    const existing = document.getElementById('finish-mask');
+    if(existing) existing.remove();
+
+    // find the finish cell element
+    const cells = mazeGrid.querySelectorAll('.cell');
+    const finishIndex = finishPos.y * 10 + finishPos.x;
+    if(!cells[finishIndex]) return;
+
+    const finishCell = cells[finishIndex];
+
+    // get position of finishCell relative to maze-wrapper
+    const wrapper = document.getElementById('maze-wrapper');
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const cellRect = finishCell.getBoundingClientRect();
+
+    // compute position inside wrapper
+    const left = cellRect.left - wrapperRect.left;
+    const top = cellRect.top - wrapperRect.top;
+    const width = cellRect.width;
+    const height = cellRect.height;
+
+    // create mask element
+    const mask = document.createElement('div');
+    mask.id = 'finish-mask';
+    // style: position absolute inside wrapper so it covers border at finish edge
+    mask.style.position = 'absolute';
+    // place mask slightly outside the maze area to cover border thickness;
+    // adjust offsets if your wrapper border thickness differs
+    const borderThickness = 10; // match CSS border thickness of #maze-wrapper
+    // we want mask to sit over the wrapper border at the finish side.
+    // place mask at finish cell coords (relative) and stretch to cover border area
+    mask.style.left = (left + (cellRect.width/2) - (borderThickness/2)) + 'px';
+    mask.style.top = (top + (cellRect.height/2) - (borderThickness/2)) + 'px';
+    // make mask slightly bigger than border thickness
+    mask.style.width = (borderThickness + 2) + 'px';
+    mask.style.height = (borderThickness + 2) + 'px';
+    mask.style.background = getComputedStyle(wrapper).backgroundColor || '#ffeef6';
+    mask.style.zIndex = 10;
+    mask.style.borderRadius = '4px';
+
+    const eps = 1;
+    // check if finish cell touches wrapper right edge
+    if(Math.abs((left + width) - (wrapper.clientWidth - borderThickness)) < eps) { // touches right
+        mask.style.left = (left + width - 1) + 'px';
+        mask.style.top = top + 'px';
+        mask.style.width = (borderThickness + 4) + 'px';
+        mask.style.height = height + 'px';
+        mask.style.borderRadius = '0';
+    } else if(Math.abs(left - borderThickness) < eps) { // touches left
+        mask.style.left = (left - borderThickness) + 'px';
+        mask.style.top = top + 'px';
+        mask.style.width = (borderThickness + 4) + 'px';
+        mask.style.height = height + 'px';
+        mask.style.borderRadius = '0';
+    } else if(Math.abs(top - borderThickness) < eps) { // touches top
+        mask.style.left = left + 'px';
+        mask.style.top = (top - borderThickness) + 'px';
+        mask.style.width = width + 'px';
+        mask.style.height = (borderThickness + 4) + 'px';
+        mask.style.borderRadius = '0';
+    } else if(Math.abs((top + height) - (wrapper.clientHeight - borderThickness)) < eps) { // touches bottom
+        mask.style.left = left + 'px';
+        mask.style.top = (top + height - 1) + 'px';
+        mask.style.width = width + 'px';
+        mask.style.height = (borderThickness + 4) + 'px';
+        mask.style.borderRadius = '0';
+    } else {
+        // default: small square over center of finish cell
+    }
+
+    wrapper.appendChild(mask);
+}
+
+function updateMaze(){
+    const cells = mazeGrid.querySelectorAll('.cell');
+    cells.forEach((c,i)=>{
+        const x = i % 10;
+        const y = Math.floor(i / 10);
+        c.innerHTML = '';
+        c.classList.remove('player','finish');
+
+        if (mazeMap[y][x] === 1) {
+            c.classList.add('wall');
+            c.classList.remove('path');
+}       else {
+        c.classList.add('path');
+        c.classList.remove('wall');
+}
+
+        if(x===finishPos.x && y===finishPos.y){
+            c.classList.add('finish');
+            const finishImg = document.createElement('img');
+            finishImg.src='game/mocha.png';
+            c.appendChild(finishImg);
+        }
+    });
+
+    const index = playerPos.y*10 + playerPos.x;
+    const playerCell = cells[index];
+    playerCell.classList.add('player');
+    const playerImg = document.createElement('img');
+    playerImg.src='game/milk.png';
+    playerCell.appendChild(playerImg);
+
+    if(playerPos.x===finishPos.x && playerPos.y===finishPos.y){
+
+    mazeGrid.style.pointerEvents = "none";
+
+    setTimeout(() => {
+        successOverlay.classList.add('show');
+
+        fadeOutAudio(bgMusic);
+        soundSuccess.currentTime = 0;
+        soundSuccess.play();
+
+        setTimeout(()=>nextBtn.classList.add('show'),1000);
+    }, 300);
+}
+}
+
+// Arrow buttons
+document.getElementById('up').addEventListener('click',()=>movePlayer(0,-1));
+document.getElementById('down').addEventListener('click',()=>movePlayer(0,1));
+document.getElementById('left').addEventListener('click',()=>movePlayer(-1,0));
+document.getElementById('right').addEventListener('click',()=>movePlayer(1,0));
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+        e.preventDefault(); // ✅ STOP PAGE FROM MOVING
+    }
+
+    switch(e.key){
+        case 'ArrowUp': movePlayer(0,-1); break;
+        case 'ArrowDown': movePlayer(0,1); break;
+        case 'ArrowLeft': movePlayer(-1,0); break;
+        case 'ArrowRight': movePlayer(1,0); break;
+    }
+});
+
+function movePlayer(dx, dy){
+    soundClick.currentTime = 0;
+    soundClick.play();
+
+    const newX = playerPos.x + dx;
+    const newY = playerPos.y + dy;
+    
+    if (mazeMap[newY][newX] === 1) {
+        shakeMaze();
+        return;
+    }
+
+    if(newX<0||newX>=10||newY<0||newY>=10) return;
+    if(mazeMap[newY][newX]===1) return;
+
+    playerPos.x = newX;
+    playerPos.y = newY;
+    updateMaze();
+}
+
+playAgainBtn.addEventListener('click',()=>{
+    playButtonSFX();
+    animateBtn(playAgainBtn);
+    
+    successOverlay.classList.remove('show');
+    nextBtn.classList.remove('show');
+    playerPos={x:0,y:0};
+    initMaze();
+});
+
+// Next page
+nextBtn.addEventListener('click', () => {
+
+    // 🔥 DIRECT USER GESTURE AUDIO (INI KUNCI)
+    buttonSound.currentTime = 0;
+    buttonSound.play();
+
+    animateBtn(nextBtn);
+    fadeInAudio(bgMusic);
+
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+        window.location.href = 'page3.html';
+    }, 500);
+
+});
+</script>
+</body>
+</html>

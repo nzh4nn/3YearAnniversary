@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our First Day 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand&family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="icon" type="image" href="photo/website-icon.png">
+
+    <style>
+        body::before {
+            content:"";
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+
+            background:
+                linear-gradient(
+                    rgba(255,230,242,0.6),
+                    rgba(255,179,217,0.6)
+            ),
+                url("background/bgintro.png");
+
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+
+            z-index:-1;
+}
+
+        body {
+            margin:0;
+            padding:0;
+            font-family:'Quicksand',sans-serif;
+
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+
+            height:100vh;
+            overflow:hidden;
+            position:relative;
+
+            /* PAGE TRANSITION */
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+
+        body.fade-out {
+            opacity: 0;
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff69b4;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+
+        .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 30%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 40%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .heart:nth-child(6) { left: 60%; animation-delay: 5s; }
+        .heart:nth-child(7) { left: 70%; animation-delay: 6s; }
+        .heart:nth-child(8) { left: 80%; animation-delay: 7s; }
+        .heart:nth-child(9) { left: 90%; animation-delay: 8s; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            padding: 30px 30px 40px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .card-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .photo {
+            width: 130px;
+            height: 130px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 28px;
+            color: #ff69b4;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: #ef469a;
+            margin-bottom: 20px;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            border: 2px solid #ffb3d9;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: linear-gradient(90deg, #ff69b4, #ffb3d9);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-family: 'Dancing Script', cursive;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .error {
+            color: #ff69b4;
+            font-size: 14px;
+            display: none;
+        }
+
+        .btn-pulse {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* Card Shake */
+        .shake {
+            animation: shake 0.35s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+
+        /* MOBILE FIX */
+        @media(max-width: 500px) {
+            .card-wrapper {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .photo {
+                width: 120px;
+                height: 120px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <audio id="bgMusic" src="audio/intro.mp3" loop preload="auto"></audio>
+    <audio id="btnSound" src="audio/button.mp3" preload="auto"></audio>
+
+    <!-- Floating hearts -->
+    <div class="heart">💕</div>
+    <div class="heart">💖</div>
+    <div class="heart">💗</div>
+    <div class="heart">💓</div>
+    <div class="heart">💕</div>
+    <div class="heart">💖</div>
+    <div class="heart">💗</div>
+    <div class="heart">💓</div>
+    <div class="heart">💕</div>
+
+    <div class="card">
+        <div class="card-wrapper">
+            <img src="photo/photo1.png" class="photo">
+
+            <div class="card-content">
+                <h1>Our First Day 💕</h1>
+                <h2>cuba masukkan tarikh first day kita kenal, hehe 💗</h2>
+
+                <input type="date" id="dateInput">
+                <button id="continueBtn">Teruskan 💕</button>
+                <div class="error" id="errorMsg">OUHHH TAK INGAT KE 😠💗</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    function fadeInAudio(audio, duration = 800) {
+    audio.volume = 0;
+    audio.play();
+    let step = 0.05;
+    const interval = duration / (1 / step);
+    const fade = setInterval(() => {
+        if (audio.volume < 0.5) {
+            audio.volume += step;
+        } else {
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+function fadeOutAudio(audio, duration = 500) {
+    let step = 0.05;
+    const interval = duration / (audio.volume / step);
+    const fade = setInterval(() => {
+        if (audio.volume > 0) {
+            audio.volume -= step;
+        } else {
+            audio.pause();
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+    window.addEventListener("load", () => {
+        document.body.classList.add("fade-in");
+    });
+
+    const bgMusic = document.getElementById("bgMusic");
+    const btnSound = document.getElementById("btnSound");
+    bgMusic.volume = 0.50;
+    btnSound.volume = 0.8;
+
+    window.addEventListener("load", () => {
+        const playPromise = bgMusic.play();
+        bgMusic.play().catch(() => {
+            document.body.addEventListener("click", () => {
+                bgMusic.play();
+            }, { once: true });
+        });
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                document.body.addEventListener("click", () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+        }
+    });
+
+    document.getElementById("continueBtn").addEventListener("click", () => {
+        btnSound.currentTime = 0;
+        btnSound.play();
+        });
+
+    const btn = document.getElementById("continueBtn");
+    const card = document.querySelector(".card");
+
+btn.addEventListener("click", () => {
+
+    // button sound
+    btnSound.currentTime = 0;
+    btnSound.play();
+
+    // pulse animation
+    btn.classList.add("btn-pulse");
+    setTimeout(() => btn.classList.remove("btn-pulse"), 300);
+
+    const selectedDate = document.getElementById('dateInput').value;
+    const correctDate = '2022-12-27';
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (selectedDate === correctDate) {
+
+        fadeOutAudio(bgMusic); // fade music keluar
+        document.body.classList.add("fade-out");
+
+        setTimeout(() => {
+            window.location.href = 'page2.html';
+        }, 500);
+
+    } else {
+        errorMsg.style.display = "block";
+
+        // shake card bila salah
+        card.classList.add("shake");
+        setTimeout(() => card.classList.remove("shake"), 350);
+    }
+});
+
+</script>
+</body>
+</html>

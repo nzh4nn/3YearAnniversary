@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Memory</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand&family=Dancing+Script&display=swap" rel="stylesheet">
+<link rel="icon" type="image" href="photo/website-icon.png">
+
+<style>
+
+body::before {
+    content:"";
+    position:fixed;
+    inset:0;
+
+    background:
+        linear-gradient(
+            rgba(255,230,242,0.6),
+            rgba(255,179,217,0.6)
+        ),
+        url("background/bgpage4.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    z-index:-1;
+}
+
+
+body {
+    margin:0;
+    padding:0;
+    font-family:'Quicksand',sans-serif;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    height:100vh;
+    overflow:hidden;
+    position:relative;
+
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+body.fade-in {
+    opacity: 1;
+}
+
+body.fade-out {
+    opacity: 0;
+}    
+
+
+/* Heading */
+.heading {
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    margin: 20px 0;
+    color: #d63384;
+}
+
+/* Container 3 atas 2 bawah */
+.container {
+    max-width: 900px;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    justify-items: center;
+}
+
+/* Photo Card */
+.photo-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px;
+    width: 230px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: rotate(-2deg);
+    transition: transform 0.4s ease;
+}
+
+.photo-card:nth-child(even) {
+    transform: rotate(2deg);
+}
+
+.photo-card:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+/* Photo */
+.photo {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1.5px solid #ffb3d9;
+}
+
+/* Caption */
+.caption {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #666;
+    padding: 3px;
+    border-bottom: 1px dashed #ffb3d9;
+}
+
+/* Ending text */
+.ending-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px;
+    text-align: center;
+    color: #ffffff;
+    margin: 3px 0;
+}
+
+/* Button home */
+.page-flip {
+    background: #d71919;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.page-flip:hover {
+    background: #ff80bf;
+    transform: scale(1.05);
+}
+
+/* Falling leaves */
+.leaf {
+    position: absolute;
+    top: -60px;
+    width: 40px;
+    pointer-events:none;
+    animation-name: fall, spin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+    from { transform: translateY(-80px); }
+    to { transform: translateY(110vh); }
+}
+
+@keyframes spin {
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
+}
+
+/* responsive */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="bgMusic" src="audio/page4.mp3" loop preload="auto"></audio>
+<audio id="btnSound" src="audio/button.mp3" preload="auto"></audio>
+
+
+<h1 class="heading">Our Memories 💖</h1>
+
+<div class="container">
+    <div class="photo-card">
+        <img src="photo/m1.png" class="photo">
+        <div class="caption">First game kita main sama sama 🌸</div>
+    </div>
+    <div class="photo-card">
+        <img src="photo/m2.png" class="photo">
+        <div class="caption">Love epep 💕</div>
+    </div>
+    <div class="photo-card">
+        <img src="photo/m3.png" class="photo">
+        <div class="caption">You n pingu 🤍</div>
+    </div>
+    <div class="photo-card">
+        <img src="photo/m4.png" class="photo">
+        <div class="caption">Singgah warung. lapaq 💖</div>
+    </div>
+    <div class="photo-card">
+        <img src="photo/m5.png" class="photo">
+        <div class="caption">Lepak waterfall 🌹</div>
+    </div>
+</div>
+
+<div class="ending-text">Itu sahaja dari saya 🤍</div>
+<div class="ending-text">Happy Anniversary and Happy New Year Sayanggg 💕</div>
+
+<button class="page-flip" id="homeBtn">🏠 Home</button>
+
+<script>
+
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+/* BACKSOUND */
+const bgMusic = document.getElementById("bgMusic");
+const btnSound = document.getElementById("btnSound");
+
+bgMusic.volume = 0.3; // boleh adjust (0.1 - 0.5)
+
+// auto play (fallback mobile)
+window.addEventListener("load", () => {
+    const playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            document.body.addEventListener("click", () => {
+                bgMusic.play();
+            }, { once: true });
+        });
+    }
+});
+
+function fadeInAudio(audio, duration = 800) {
+    audio.volume = 0;
+    audio.play();
+    let step = 0.05;
+    const interval = duration / (1 / step);
+    const fade = setInterval(() => {
+        if (audio.volume < 0.5) {
+            audio.volume += step;
+        } else {
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+function fadeOutAudio(audio, duration = 500) {
+    let step = 0.05;
+    const interval = duration / (audio.volume / step);
+    const fade = setInterval(() => {
+        if (audio.volume > 0) {
+            audio.volume -= step;
+        } else {
+            audio.pause();
+            clearInterval(fade);
+        }
+    }, interval);
+}
+
+
+/* BUTTON HOME SOUND */
+document.getElementById("homeBtn").addEventListener("click", () => {
+    btnSound.currentTime = 0;
+    btnSound.play();
+    fadeInAudio(bgMusic);
+
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+        window.location.href = "index.html";
+    }, 500);
+});
+
+/* Falling leaves */
+const leaves = [
+    'background/love1.png',
+    'background/love2.png',
+    'background/love3.png',
+    'background/love4.png'
+];
+
+for(let i=0;i<25;i++){
+    const leaf=document.createElement('img');
+    leaf.src=leaves[Math.floor(Math.random()*leaves.length)];
+    leaf.className='leaf';
+    leaf.style.left=Math.random()*100+'vw';
+    leaf.style.animationDuration=(12+Math.random()*10)+'s';
+    leaf.style.opacity=0.4+Math.random()*0.6;
+    leaf.style.width=30+Math.random()*25+'px';
+    document.body.appendChild(leaf);
+}
+</script>
+
+</body>
+</html>
